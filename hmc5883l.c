@@ -148,9 +148,12 @@ err_code_t hmc5883l_get_mag_raw(hmc5883l_handle_t handle, int16_t *raw_x, int16_
 		return ERR_CODE_NULL_PTR;
 	}
 
-	handle->i2c_recv(HMC5883L_REG_OUT_X_M, (uint8_t *)raw_x, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Y_M, (uint8_t *)raw_y, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Z_M, (uint8_t *)raw_z, 2);
+	uint8_t mag_raw_data[6];
+	handle->i2c_recv(HMC5883L_REG_OUT_X_M, mag_raw_data, 6);
+
+	*raw_x = (int16_t)((int16_t)(mag_raw_data[0] << 8) | mag_raw_data[1]);
+	*raw_y = (int16_t)((int16_t)(mag_raw_data[2] << 8) | mag_raw_data[3]);
+	*raw_z = (int16_t)((int16_t)(mag_raw_data[4] << 8) | mag_raw_data[5]);
 
 	return ERR_CODE_SUCCESS;
 }
@@ -163,11 +166,14 @@ err_code_t hmc5883l_get_mag_calib(hmc5883l_handle_t handle, int16_t *calib_x, in
 		return ERR_CODE_NULL_PTR;
 	}
 
+	uint8_t mag_raw_data[6];
 	int16_t raw_x = 0, raw_y = 0, raw_z = 0;
 
-	handle->i2c_recv(HMC5883L_REG_OUT_X_M, (uint8_t *)&raw_x, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Y_M, (uint8_t *)&raw_y, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Z_M, (uint8_t *)&raw_z, 2);
+	handle->i2c_recv(HMC5883L_REG_OUT_X_M, mag_raw_data, 6);
+
+	raw_x = (int16_t)((int16_t)(mag_raw_data[0] << 8) | mag_raw_data[1]);
+	raw_y = (int16_t)((int16_t)(mag_raw_data[2] << 8) | mag_raw_data[3]);
+	raw_z = (int16_t)((int16_t)(mag_raw_data[4] << 8) | mag_raw_data[5]);
 
 	*calib_x = raw_x - handle->mag_bias_x;
 	*calib_y = raw_y - handle->mag_bias_y;
@@ -184,11 +190,14 @@ err_code_t hmc5883l_get_mag_scale(hmc5883l_handle_t handle, float *scale_x, floa
 		return ERR_CODE_NULL_PTR;
 	}
 
+	uint8_t mag_raw_data[6];
 	int16_t raw_x = 0, raw_y = 0, raw_z = 0;
 
-	handle->i2c_recv(HMC5883L_REG_OUT_X_M, (uint8_t *)&raw_x, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Y_M, (uint8_t *)&raw_y, 2);
-	handle->i2c_recv(HMC5883L_REG_OUT_Z_M, (uint8_t *)&raw_z, 2);
+	handle->i2c_recv(HMC5883L_REG_OUT_X_M, mag_raw_data, 6);
+
+	raw_x = (int16_t)((int16_t)(mag_raw_data[0] << 8) | mag_raw_data[1]);
+	raw_y = (int16_t)((int16_t)(mag_raw_data[2] << 8) | mag_raw_data[3]);
+	raw_z = (int16_t)((int16_t)(mag_raw_data[4] << 8) | mag_raw_data[5]);
 
 	*scale_x = (raw_x - handle->mag_bias_x) * handle->mag_scaling_factor;
 	*scale_y = (raw_y - handle->mag_bias_y) * handle->mag_scaling_factor;
