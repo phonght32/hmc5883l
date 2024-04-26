@@ -25,7 +25,7 @@ typedef struct hmc5883l {
 	hmc5883l_func_i2c_send      i2c_send;        			/*!< HMC5883L send bytes */
 	hmc5883l_func_i2c_recv      i2c_recv;         			/*!< HMC5883L receive bytes */
 	hmc5883l_func_delay         delay;                 		/*!< HMC5883L delay function */
-	float 						mag_per_digit;				/*!< Mag/digit */
+	float 						mag_scaling_factor;			/*!< Magnetometer scaling factor */
 	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
 	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
 	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
@@ -50,40 +50,40 @@ err_code_t hmc5883l_set_config(hmc5883l_handle_t handle, hmc5883l_cfg_t config)
 		return ERR_CODE_NULL_PTR;
 	}
 
-	float mag_per_digit = 0;
+	float mag_scaling_factor = 0;
 
 	switch (config.range)
 	{
 	case HMC5883L_RANGE_0_88GA:
-		mag_per_digit = 0.073f;
+		mag_scaling_factor = 0.073f;
 		break;
 
 	case HMC5883L_RANGE_1_3GA:
-		mag_per_digit = 0.92f;
+		mag_scaling_factor = 0.92f;
 		break;
 
 	case HMC5883L_RANGE_1_9GA:
-		mag_per_digit = 1.22f;
+		mag_scaling_factor = 1.22f;
 		break;
 
 	case HMC5883L_RANGE_2_5GA:
-		mag_per_digit = 1.52f;
+		mag_scaling_factor = 1.52f;
 		break;
 
 	case HMC5883L_RANGE_4_0GA:
-		mag_per_digit = 2.27f;
+		mag_scaling_factor = 2.27f;
 		break;
 
 	case HMC5883L_RANGE_4_7GA:
-		mag_per_digit = 2.56f;
+		mag_scaling_factor = 2.56f;
 		break;
 
 	case HMC5883L_RANGE_5_6GA:
-		mag_per_digit = 3.03f;
+		mag_scaling_factor = 3.03f;
 		break;
 
 	case HMC5883L_RANGE_8_1GA:
-		mag_per_digit = 4.35f;
+		mag_scaling_factor = 4.35f;
 		break;
 
 	default:
@@ -97,7 +97,7 @@ err_code_t hmc5883l_set_config(hmc5883l_handle_t handle, hmc5883l_cfg_t config)
 	handle->i2c_send = config.i2c_send;
 	handle->i2c_recv = config.i2c_recv;
 	handle->delay = config.delay;
-	handle->mag_per_digit = mag_per_digit;
+	handle->mag_scaling_factor = mag_scaling_factor;
 	handle->mag_bias_x = config.mag_bias_x;
 	handle->mag_bias_y = config.mag_bias_y;
 	handle->mag_bias_z = config.mag_bias_z;
@@ -190,9 +190,9 @@ err_code_t hmc5883l_get_mag_scale(hmc5883l_handle_t handle, float *scale_x, floa
 	handle->i2c_recv(HMC5883L_REG_OUT_Y_M, (uint8_t *)&raw_y, 2);
 	handle->i2c_recv(HMC5883L_REG_OUT_Z_M, (uint8_t *)&raw_z, 2);
 
-	*scale_x = (raw_x - handle->mag_bias_x) * handle->mag_per_digit;
-	*scale_y = (raw_y - handle->mag_bias_y) * handle->mag_per_digit;
-	*scale_z = (raw_z - handle->mag_bias_z) * handle->mag_per_digit;
+	*scale_x = (raw_x - handle->mag_bias_x) * handle->mag_scaling_factor;
+	*scale_y = (raw_y - handle->mag_bias_y) * handle->mag_scaling_factor;
+	*scale_z = (raw_z - handle->mag_bias_z) * handle->mag_scaling_factor;
 
 	return ERR_CODE_SUCCESS;
 }
