@@ -22,13 +22,13 @@ typedef struct hmc5883l {
 	hmc5883l_opr_mode_t  		opr_mode;  					/*!< Operating mode */
 	hmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
 	hmc5883l_sample_t  			samples;					/*!< Number of samples averaged */
+	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
+	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
+	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
 	hmc5883l_func_i2c_send      i2c_send;        			/*!< HMC5883L send bytes */
 	hmc5883l_func_i2c_recv      i2c_recv;         			/*!< HMC5883L receive bytes */
 	hmc5883l_func_delay         delay;                 		/*!< HMC5883L delay function */
 	float 						mag_scaling_factor;			/*!< Magnetometer scaling factor */
-	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
-	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
-	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
 } hmc5883l_t;
 
 hmc5883l_handle_t hmc5883l_init(void)
@@ -94,13 +94,13 @@ err_code_t hmc5883l_set_config(hmc5883l_handle_t handle, hmc5883l_cfg_t config)
 	handle->opr_mode = config.opr_mode;
 	handle->data_rate = config.data_rate;
 	handle->samples = config.samples;
+	handle->mag_bias_x = config.mag_bias_x;
+	handle->mag_bias_y = config.mag_bias_y;
+	handle->mag_bias_z = config.mag_bias_z;
 	handle->i2c_send = config.i2c_send;
 	handle->i2c_recv = config.i2c_recv;
 	handle->delay = config.delay;
 	handle->mag_scaling_factor = mag_scaling_factor;
-	handle->mag_bias_x = config.mag_bias_x;
-	handle->mag_bias_y = config.mag_bias_y;
-	handle->mag_bias_z = config.mag_bias_z;
 
 	return ERR_CODE_SUCCESS;
 }

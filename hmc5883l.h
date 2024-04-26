@@ -94,12 +94,12 @@ typedef struct {
 	hmc5883l_opr_mode_t  		opr_mode;  					/*!< Operating mode */
 	hmc5883l_data_rate_t  		data_rate;					/*!< Data output rate */
 	hmc5883l_sample_t  			samples;					/*!< Number of samples averaged */
-	hmc5883l_func_i2c_send      i2c_send;        			/*!< HMC5883L send bytes */
-	hmc5883l_func_i2c_recv      i2c_recv;         			/*!< HMC5883L receive bytes */
-	hmc5883l_func_delay         delay;                 		/*!< HMC5883L delay function */
 	int 						mag_bias_x;  				/*!< Magnetometer bias x axis */
 	int 						mag_bias_y;  				/*!< Magnetometer bias y axis */
 	int 						mag_bias_z;  				/*!< Magnetometer bias z axis */
+	hmc5883l_func_i2c_send      i2c_send;        			/*!< HMC5883L send bytes */
+	hmc5883l_func_i2c_recv      i2c_recv;         			/*!< HMC5883L receive bytes */
+	hmc5883l_func_delay         delay;                 		/*!< HMC5883L delay function */
 } hmc5883l_cfg_t;
 
 /*
